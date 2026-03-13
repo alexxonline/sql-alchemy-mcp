@@ -1,0 +1,35 @@
+[project]
+name = "sqlalchemy-mcp-server"
+version = "0.1.0"
+description = "An MCP server providing SQL database access through SQLAlchemy"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp>=2.0",
+    "sqlalchemy>=2.0",
+]
+
+[project.optional-dependencies]
+postgresql = ["psycopg2-binary"]
+mysql = ["pymysql"]
+oracle = ["oracledb"]
+mssql = ["pyodbc"]
+all = [
+    "psycopg2-binary",
+    "pymysql",
+    "oracledb",
+    "pyodbc",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio",
+]
+
+[project.scripts]
+sqlalchemy-mcp-server = "sqlalchemy_mcp_server.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sqlalchemy_mcp_server"]

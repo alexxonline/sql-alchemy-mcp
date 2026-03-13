@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:gofastmcp.com)",
+      "WebFetch(domain:docs.sqlalchemy.org)",
+      "Bash(source /home/alexsaez/projects/sqlalchemy-mcp-server/.venv/bin/activate && python -m sqlalchemy_mcp_server 2>&1; echo \"EXIT: $?\")",
+      "Bash(source /home/alexsaez/projects/sqlalchemy-mcp-server/.venv/bin/activate && python -m sqlalchemy_mcp_server --db-url \"sqlite:///test.db\" --mode invalid 2>&1; echo \"EXIT: $?\")",
+      "Bash(source /home/alexsaez/projects/sqlalchemy-mcp-server/.venv/bin/activate && SQLALCHEMY_MCP_DB_URL=\"sqlite://\" python -m sqlalchemy_mcp_server --help 2>&1 | head -3)"
+    ]
+  }
+}

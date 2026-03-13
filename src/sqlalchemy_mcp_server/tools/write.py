@@ -1,0 +1,1 @@
+"""Write MCP tools (stub)."""
