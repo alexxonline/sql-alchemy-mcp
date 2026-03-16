@@ -3,6 +3,22 @@ name = "sqlalchemy-mcp-server"
 version = "0.1.0"
 description = "An MCP server providing SQL database access through SQLAlchemy"
 requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    { name = "Alex Saez" },
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database",
+    "Topic :: Software Development :: Libraries",
+]
 dependencies = [
     "fastmcp>=2.0",
     "sqlalchemy>=2.0",
@@ -24,6 +40,9 @@ dev = [
     "pytest-asyncio",
 ]
 
+[project.urls]
+Repository = "https://github.com/alexsaez/sqlalchemy-mcp-server"
+
 [project.scripts]
 sqlalchemy-mcp-server = "sqlalchemy_mcp_server.__main__:main"
 
@@ -33,3 +52,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/sqlalchemy_mcp_server"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

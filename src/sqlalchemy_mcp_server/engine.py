@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.engine import Connection, Engine, Inspector, make_url
+from sqlalchemy.pool import StaticPool
 
 
 class DatabaseEngine:
@@ -19,8 +20,12 @@ class DatabaseEngine:
             "echo": False,
         }
 
-        # SQLite doesn't support pool_size (uses StaticPool/NullPool)
-        if self.dialect_name != "sqlite":
+        if self.dialect_name == "sqlite":
+            # SQLite in-memory databases need StaticPool to share state
+            # across connections; file-based SQLite also benefits from it
+            kwargs["poolclass"] = StaticPool
+            kwargs["connect_args"] = {"check_same_thread": False}
+        else:
             kwargs["pool_size"] = pool_size
 
         self._engine: Engine = create_engine(url, **kwargs)

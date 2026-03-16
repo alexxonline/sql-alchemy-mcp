@@ -36,8 +36,21 @@ def create_server(config: ServerConfig) -> FastMCP:
 
     mcp = FastMCP("SQLAlchemy MCP Server")
 
-    # Read tools will be registered in iteration 3
-    # Write tools will be registered in iteration 4 (readwrite mode only)
-    # Resources and prompts will be added in iteration 5
+    from .tools.read import register_read_tools
+
+    register_read_tools(mcp)
+
+    if config.mode == "readwrite":
+        from .tools.write import register_write_tools
+
+        register_write_tools(mcp)
+
+    from .resources import register_resources
+
+    register_resources(mcp, mode=config.mode)
+
+    from .prompts import register_prompts
+
+    register_prompts(mcp)
 
     return mcp

@@ -87,3 +87,4 @@ sqlalchemy-mcp-server/
 | 5         | [05-resources-and-prompts.md](05-resources-and-prompts.md) | MCP resources and prompts                     |
 | 6         | [06-testing.md](06-testing.md)                         | Testing strategy and test implementation          |
 | 7         | [07-packaging-and-distribution.md](07-packaging-and-distribution.md) | Packaging, README, and distribution   |
+| 8         | [08-cli-mode.md](08-cli-mode.md)                                     | CLI mode for one-shot command execution |
