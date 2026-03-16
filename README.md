@@ -1,4 +1,4 @@
-# SQLAlchemy MCP Server
+# SQLAlchemy MCP Server and CLI
 
 An [MCP](https://modelcontextprotocol.io/) server that provides SQL database access through [SQLAlchemy](https://www.sqlalchemy.org/). Built with [FastMCP](https://gofastmcp.com/), it supports any database that SQLAlchemy supports and operates in **read-only** or **read-write** mode.
 
@@ -14,7 +14,7 @@ When an agent needs to interact with a database, it often has to generate full S
 
 - chances of syntax errors across dialects
 
-This tool provides a compact CLI abstraction over SQLAlchemy, allowing agents (or humans) to interact with multiple databases using short commands instead of full SQL statements.
+This tool provides an MCP Server and a compact CLI abstraction over SQLAlchemy, allowing agents (or humans) to interact with multiple databases using short commands instead of full SQL statements.
 
 ### Benefits:
 
