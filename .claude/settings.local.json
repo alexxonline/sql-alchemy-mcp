@@ -5,7 +5,12 @@
       "WebFetch(domain:docs.sqlalchemy.org)",
       "Bash(source /home/alexsaez/projects/sqlalchemy-mcp-server/.venv/bin/activate && python -m sqlalchemy_mcp_server 2>&1; echo \"EXIT: $?\")",
       "Bash(source /home/alexsaez/projects/sqlalchemy-mcp-server/.venv/bin/activate && python -m sqlalchemy_mcp_server --db-url \"sqlite:///test.db\" --mode invalid 2>&1; echo \"EXIT: $?\")",
-      "Bash(source /home/alexsaez/projects/sqlalchemy-mcp-server/.venv/bin/activate && SQLALCHEMY_MCP_DB_URL=\"sqlite://\" python -m sqlalchemy_mcp_server --help 2>&1 | head -3)"
+      "Bash(source /home/alexsaez/projects/sqlalchemy-mcp-server/.venv/bin/activate && SQLALCHEMY_MCP_DB_URL=\"sqlite://\" python -m sqlalchemy_mcp_server --help 2>&1 | head -3)",
+      "Bash(python -c \"import fastmcp; print\\(fastmcp.__version__\\)\" 2>/dev/null || echo \"no version attr\")",
+      "Bash(python -c \"from fastmcp import FastMCP; m = FastMCP\\('test'\\); print\\([x for x in dir\\(m\\) if not x.startswith\\('_'\\) and 'tool' in x.lower\\(\\) or 'resource' in x.lower\\(\\) or 'prompt' in x.lower\\(\\)]\\)\")",
+      "Bash(uv run:*)",
+      "Bash(which pip3:*)",
+      "Bash(.venv/bin/python -c \"from fastmcp import FastMCP; m = FastMCP\\('test'\\); print\\([x for x in dir\\(m\\) if not x.startswith\\('_'\\)]\\)\")"
     ]
   }
 }

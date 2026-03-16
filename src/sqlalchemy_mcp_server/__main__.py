@@ -7,7 +7,12 @@ import sys
 from .server import ServerConfig, create_server
 
 
-def parse_args(argv: list[str] | None = None) -> ServerConfig:
+def parse_args(argv: list[str] | None = None) -> tuple[ServerConfig, list[str] | None]:
+    """Parse arguments, returning (config, cli_args).
+
+    cli_args is None when running in server mode, or the remaining
+    arguments after --cli when running in CLI mode.
+    """
     parser = argparse.ArgumentParser(
         prog="sqlalchemy-mcp-server",
         description="MCP server providing SQL database access through SQLAlchemy",
@@ -49,6 +54,12 @@ def parse_args(argv: list[str] | None = None) -> ServerConfig:
         action="store_true",
         help="Disable connection pre-ping (enabled by default)",
     )
+    parser.add_argument(
+        "--cli",
+        nargs=argparse.REMAINDER,
+        default=None,
+        help="Run in CLI mode: execute a single command and exit",
+    )
 
     args = parser.parse_args(argv)
 
@@ -58,7 +69,7 @@ def parse_args(argv: list[str] | None = None) -> ServerConfig:
             "the SQLALCHEMY_MCP_DB_URL environment variable."
         )
 
-    return ServerConfig(
+    config = ServerConfig(
         db_url=args.db_url,
         mode=args.mode,
         transport=args.transport,
@@ -67,16 +78,27 @@ def parse_args(argv: list[str] | None = None) -> ServerConfig:
         pool_pre_ping=not args.no_pool_pre_ping,
     )
 
+    return config, args.cli
+
 
 def main(argv: list[str] | None = None) -> None:
-    config = parse_args(argv)
+    config, cli_args = parse_args(argv)
     mcp = create_server(config)
 
-    transport_kwargs = {}
-    if config.transport == "http":
-        transport_kwargs["port"] = config.port
+    if cli_args is not None:
+        from .cli import run_cli
+        from .engine import get_db
 
-    mcp.run(transport=config.transport, **transport_kwargs)
+        try:
+            run_cli(mcp, cli_args, mode=config.mode)
+        finally:
+            get_db().dispose()
+    else:
+        transport_kwargs = {}
+        if config.transport == "http":
+            transport_kwargs["port"] = config.port
+
+        mcp.run(transport=config.transport, **transport_kwargs)
 
 
 if __name__ == "__main__":

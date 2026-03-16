@@ -61,7 +61,7 @@ sqlalchemy-mcp-server --db-url "postgresql://user:pass@localhost/mydb" --mode re
 sqlalchemy-mcp-server --db-url "sqlite:///mydb.db" --transport http --port 9000
 ```
 
-## CLI Usage
+## Server Options
 
 ```
 sqlalchemy-mcp-server [OPTIONS]
@@ -75,6 +75,104 @@ sqlalchemy-mcp-server [OPTIONS]
 | `--port`           | `8000`      | Port for HTTP transport                                  |
 | `--pool-size`      | `5`         | Connection pool size                                     |
 | `--no-pool-pre-ping` | (off)    | Disable connection pre-ping                              |
+| `--cli`            | (off)       | Run in CLI mode (one-shot command execution, then exit)  |
+
+## CLI Mode
+
+Add `--cli` to run any tool, resource, or prompt as a one-shot command. The program connects, executes, prints the result to stdout, and exits — no MCP server is started.
+
+### Running tools
+
+```bash
+# Query a table
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli query --sql "SELECT * FROM users"
+
+# List tables
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli list_tables
+
+# Describe a table
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli describe_table --table-name users
+
+# Get CREATE TABLE DDL
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli get_table_ddl --table-name users
+
+# Execute a write statement (requires --mode readwrite)
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --mode readwrite --cli execute \
+  --sql "INSERT INTO users (name, email) VALUES ('alice', 'alice@example.com')"
+
+# Create a table (requires --mode readwrite)
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --mode readwrite --cli create_table \
+  --table-name events \
+  --columns '[{"name": "id", "type": "INTEGER", "primary_key": true}, {"name": "title", "type": "TEXT"}]'
+```
+
+### Reading resources
+
+```bash
+# Database overview
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli resource schema
+
+# List all tables
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli resource tables
+
+# Table details
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli resource table --table-name users
+
+# Table DDL
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli resource table-ddl --table-name users
+
+# Sample rows
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli resource table-sample --table-name users --limit 10
+```
+
+### Rendering prompts
+
+```bash
+# Schema overview prompt
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli prompt explain_schema
+
+# SQL query help
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli prompt sql_query \
+  --table-names "users,orders" --task "find users with no orders"
+
+# Query optimization
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli prompt optimize_query \
+  --sql "SELECT * FROM users WHERE name = 'alice'"
+```
+
+### Output formatting
+
+```bash
+# Pretty-printed JSON (default)
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli query --sql "SELECT * FROM users"
+
+# Compact JSON (for piping)
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli query --sql "SELECT * FROM users" --compact
+
+# Plain text table
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli query --sql "SELECT * FROM users" --format table
+```
+
+Output goes to stdout, errors to stderr, so CLI mode is composable with shell pipelines:
+
+```bash
+# Pipe to jq
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli query \
+  --sql "SELECT * FROM users" --compact | jq '.[].name'
+
+# Use in a script
+TABLES=$(sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli list_tables --compact)
+```
+
+### Getting help
+
+```bash
+# List all CLI commands
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli --help
+
+# Help for a specific command
+sqlalchemy-mcp-server --db-url sqlite:///mydb.db --cli query --help
+```
 
 ## Supported Databases
 
