@@ -41,7 +41,7 @@ dev = [
 ]
 
 [project.urls]
-Repository = "https://github.com/alexsaez/sqlalchemy-mcp-server"
+Repository = "https://github.com/alexxonline/sql-alchemy-mcp"
 
 [project.scripts]
 sqlalchemy-mcp-server = "sqlalchemy_mcp_server.__main__:main"

@@ -48,6 +48,64 @@ pip install "sqlalchemy-mcp-server[mssql]"         # MSSQL (pyodbc)
 pip install "sqlalchemy-mcp-server[all]"           # All drivers
 ```
 
+### Install from a local checkout
+
+If you'd rather clone the repository and install from source (for example, to run an unreleased version or make your own changes):
+
+```bash
+git clone https://github.com/alexxonline/sql-alchemy-mcp.git
+cd sql-alchemy-mcp
+
+# (recommended) create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+# install the package from the current directory
+pip install .
+
+# ...or with database-specific drivers
+pip install ".[postgresql]"      # or [mysql], [oracle], [mssql], [all]
+
+# ...or as an editable install, so code changes take effect without reinstalling
+pip install -e .
+```
+
+Once installed this way, the `sqlalchemy-mcp-server` command is available exactly as with the PyPI install (see [Quick Start](#quick-start) below).
+
+### Run from source without installing
+
+You can also run directly from the cloned repository without installing the package. After installing the dependencies (`pip install fastmcp sqlalchemy`, plus any driver you need), invoke it as a module from the repo root:
+
+```bash
+python -m sqlalchemy_mcp_server --db-url "sqlite:///mydb.db"
+```
+
+`python -m sqlalchemy_mcp_server ...` accepts the same arguments as the `sqlalchemy-mcp-server` command shown throughout this README, including `--cli` mode.
+
+With [uv](https://docs.astral.sh/uv/), you can run from the checkout without managing a virtual environment yourself:
+
+```bash
+uv run sqlalchemy-mcp-server --db-url "sqlite:///mydb.db"
+```
+
+When pointing an MCP client at a local checkout, use the module form as the command:
+
+```json
+{
+  "mcpServers": {
+    "my-database": {
+      "command": "python",
+      "args": [
+        "-m", "sqlalchemy_mcp_server",
+        "--db-url", "sqlite:///path/to/mydb.db",
+        "--mode", "readonly"
+      ],
+      "cwd": "/path/to/sql-alchemy-mcp"
+    }
+  }
+}
+```
+
 ## Quick Start
 
 ```bash
@@ -268,8 +326,8 @@ Add to your `claude_desktop_config.json`:
 
 ```bash
 # Clone and install in development mode
-git clone https://github.com/alexsaez/sqlalchemy-mcp-server.git
-cd sqlalchemy-mcp-server
+git clone https://github.com/alexxonline/sql-alchemy-mcp.git
+cd sql-alchemy-mcp
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
